@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit', sans-serif;
+}
+
+/* Base resets & layout smooth scrolls */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* Matches h-20 navbar on mobile */
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 6rem; /* Matches h-24 navbar on desktop */
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #F8F9FA;
+  color: #121c2a;
+}
+
+/* Custom button tap scale resets */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ABVP Deogiri Digital Portal",
+  "description": "A highly polished, enterprise-ready digital portal for the ABVP Deogiri region, designed for digital sovereignty and student empowerment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
