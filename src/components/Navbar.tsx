@@ -151,6 +151,19 @@ export default function Navbar({
     setActiveDropdown(null);
   };
 
+  const handleMainLinkClick = (pageId: typeof currentPage) => {
+    localStorage.removeItem('navScrollTarget');
+    localStorage.removeItem('navTabTarget');
+    setCurrentPage(pageId);
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
+    setMobileExpanded(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('navSectionChange', {
+      detail: { scrollTarget: '', tabTarget: '', reset: true }
+    }));
+  };
+
   return (
     <header className="w-full sticky top-0 z-50">
       {/* Top Utility Bar */}
@@ -230,12 +243,7 @@ export default function Navbar({
                   onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
                 >
                   <button 
-                    onClick={() => {
-                      if (!hasDropdown) {
-                        setCurrentPage(link.pageId);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }
-                    }}
+                    onClick={() => handleMainLinkClick(link.pageId)}
                     className={`py-2 text-[13px] xl:text-sm font-extrabold transition-all duration-200 focus:outline-none cursor-pointer relative flex items-center gap-1 ${
                       isSelected ? 'text-orange-400' : 'text-white/80 hover:text-white'
                     }`}
@@ -359,15 +367,7 @@ export default function Navbar({
                     <div key={idx} className="border-b border-white/5 last:border-0 py-1 flex flex-col">
                       <div className="flex justify-between items-center w-full">
                         <button 
-                          onClick={() => {
-                            if (!hasDropdown) {
-                              setCurrentPage(link.pageId);
-                              setIsMobileMenuOpen(false);
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
-                            } else {
-                              setMobileExpanded(isExpanded ? null : link.pageId);
-                            }
-                          }}
+                          onClick={() => handleMainLinkClick(link.pageId)}
                           className={`text-left py-2.5 text-sm font-extrabold flex-grow cursor-pointer ${
                             isSelected ? 'text-orange-400' : 'text-white/80'
                           }`}

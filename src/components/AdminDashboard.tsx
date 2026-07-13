@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Shield, Users, Calendar, Award, BookOpen, FileText, Image, Megaphone, 
@@ -71,6 +71,14 @@ export interface FinanceTransaction {
 interface AdminDashboardProps {
   activeLang: 'EN' | 'MR';
   onLogout: () => void;
+  session: AdminSession;
+}
+
+export interface AdminSession {
+  role: 'superadmin' | 'admin';
+  districtId?: string;
+  displayName: string;
+  officeLabel: string;
 }
 
 // --- MOCK DATABASE ---
@@ -312,10 +320,13 @@ const INITIAL_NEWS: NewsArticleItem[] = [
   { id: 'NEWS-03', title: 'Student representatives petition BAMU Vice Chancellor on hostel fee anomalies', category: 'Media Circular', district: 'sambhajinagar', date: '2026-06-28', author: 'Amol Deshmukh', body: 'A delegation of ABVP Deogiri representatives met the vice chancellor of BAMU to submit an urgent memorandum addressing anomalies in university hostel fees. The delegation demanded an audit of infrastructure repair funds and immediate relief for economically backward rural students.', status: 'Published', views: 820 },
 ];
 
-export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardProps) {
+export default function AdminDashboard({ activeLang, onLogout, session }: AdminDashboardProps) {
+  const isSuperAdmin = session.role === 'superadmin';
+  const defaultDistrictId = isSuperAdmin ? 'all' : (session.districtId || 'sambhajinagar');
+
   // Navigation
   const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string>('all'); // 'all' for complete Deogiri
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string>(defaultDistrictId); // 'all' for complete Deogiri
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -333,16 +344,44 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
   const [galleryImages, setGalleryImages] = useState<GalleryImageItem[]>(INITIAL_GALLERY_IMAGES);
   const [news, setNews] = useState<NewsArticleItem[]>(INITIAL_NEWS);
 
+  const accessibleDistricts = useMemo(() => {
+    if (isSuperAdmin) return districts;
+    return districts.filter(d => d.id === defaultDistrictId);
+  }, [districts, defaultDistrictId, isSuperAdmin]);
+
+  const accessibleDistrictIds = useMemo(() => accessibleDistricts.map(d => d.id), [accessibleDistricts]);
+
+  const selectDistrict = useCallback((districtId: string) => {
+    if (!isSuperAdmin) {
+      setSelectedDistrictId(defaultDistrictId);
+      return;
+    }
+    setSelectedDistrictId(districtId);
+  }, [isSuperAdmin, defaultDistrictId]);
+
+  useEffect(() => {
+    if (!isSuperAdmin && selectedDistrictId !== defaultDistrictId) {
+      setSelectedDistrictId(defaultDistrictId);
+    }
+  }, [isSuperAdmin, selectedDistrictId, defaultDistrictId]);
+
+  const userInitials = useMemo(
+    () => session.displayName.split(' ').map(word => word[0]).join('').slice(0, 2).toUpperCase(),
+    [session.displayName]
+  );
+
   // Forms states
-  const [newMember, setNewMember] = useState({ name: '', email: '', college: '', role: '', district: 'sambhajinagar' });
-  const [newEvent, setNewEvent] = useState({ title: '', category: '', date: '', district: 'sambhajinagar' });
-  const [newDoc, setNewDoc] = useState({ title: '', category: '', district: 'sambhajinagar', author: '' });
-  const [newFin, setNewFin] = useState({ type: 'Income' as 'Income' | 'Expense', amount: '', category: '', district: 'sambhajinagar', desc: '' });
+  const defaultFormDistrict = defaultDistrictId === 'all' ? 'sambhajinagar' : defaultDistrictId;
+
+  const [newMember, setNewMember] = useState({ name: '', email: '', college: '', role: '', district: defaultFormDistrict });
+  const [newEvent, setNewEvent] = useState({ title: '', category: '', date: '', district: defaultFormDistrict });
+  const [newDoc, setNewDoc] = useState({ title: '', category: '', district: defaultFormDistrict, author: '' });
+  const [newFin, setNewFin] = useState({ type: 'Income' as 'Income' | 'Expense', amount: '', category: '', district: defaultFormDistrict, desc: '' });
 
   // Additional Forms states
-  const [newActivity, setNewActivity] = useState({ title: '', category: 'Social Activity', district: 'sambhajinagar', volunteersCount: '', audienceReached: '', outcome: '' });
-  const [newNews, setNewNews] = useState({ title: '', category: 'Press Release' as any, district: 'sambhajinagar', author: '', body: '' });
-  const [newGalleryImage, setNewGalleryImage] = useState({ caption: '', district: 'sambhajinagar', imageUrl: '', category: 'Social March' });
+  const [newActivity, setNewActivity] = useState({ title: '', category: 'Social Activity', district: defaultFormDistrict, volunteersCount: '', audienceReached: '', outcome: '' });
+  const [newNews, setNewNews] = useState({ title: '', category: 'Press Release' as any, district: defaultFormDistrict, author: '', body: '' });
+  const [newGalleryImage, setNewGalleryImage] = useState({ caption: '', district: defaultFormDistrict, imageUrl: '', category: 'Social March' });
 
   // Document Upload File Simulator State
   const [docFileState, setDocFileState] = useState<{ name: string; size: string; progress: number; isUploading: boolean } | null>(null);
@@ -397,22 +436,22 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
         id: 'all',
         nameEN: 'ABVP Deogiri',
         nameMR: 'अभाविप देवगिरी प्रांत',
-        totalMembers: districts.reduce((acc, d) => acc + d.totalMembers, 0),
-        activeMembers: districts.reduce((acc, d) => acc + d.activeMembers, 0),
-        pendingMembers: districts.reduce((acc, d) => acc + d.pendingMembers, 0),
-        totalEvents: districts.reduce((acc, d) => acc + d.totalEvents, 0),
-        universities: districts.reduce((acc, d) => acc + d.universities, 0),
-        colleges: districts.reduce((acc, d) => acc + d.colleges, 0),
-        hostels: districts.reduce((acc, d) => acc + d.hostels, 0),
-        documents: districts.reduce((acc, d) => acc + d.documents, 0),
-        galleryImages: districts.reduce((acc, d) => acc + d.galleryImages, 0),
-        newsPublished: districts.reduce((acc, d) => acc + d.newsPublished, 0),
-        activities: districts.reduce((acc, d) => acc + d.activities, 0),
-        income: districts.reduce((acc, d) => acc + d.income, 0) + finance.filter(f => f.type === 'Income').reduce((a,c) => a+c.amount,0),
-        expenses: districts.reduce((acc, d) => acc + d.expenses, 0) + finance.filter(f => f.type === 'Expense').reduce((a,c) => a+c.amount,0)
+        totalMembers: accessibleDistricts.reduce((acc, d) => acc + d.totalMembers, 0),
+        activeMembers: accessibleDistricts.reduce((acc, d) => acc + d.activeMembers, 0),
+        pendingMembers: accessibleDistricts.reduce((acc, d) => acc + d.pendingMembers, 0),
+        totalEvents: accessibleDistricts.reduce((acc, d) => acc + d.totalEvents, 0),
+        universities: accessibleDistricts.reduce((acc, d) => acc + d.universities, 0),
+        colleges: accessibleDistricts.reduce((acc, d) => acc + d.colleges, 0),
+        hostels: accessibleDistricts.reduce((acc, d) => acc + d.hostels, 0),
+        documents: accessibleDistricts.reduce((acc, d) => acc + d.documents, 0),
+        galleryImages: accessibleDistricts.reduce((acc, d) => acc + d.galleryImages, 0),
+        newsPublished: accessibleDistricts.reduce((acc, d) => acc + d.newsPublished, 0),
+        activities: accessibleDistricts.reduce((acc, d) => acc + d.activities, 0),
+        income: accessibleDistricts.reduce((acc, d) => acc + d.income, 0) + finance.filter(f => f.type === 'Income' && (isSuperAdmin || f.district === defaultDistrictId)).reduce((a,c) => a+c.amount,0),
+        expenses: accessibleDistricts.reduce((acc, d) => acc + d.expenses, 0) + finance.filter(f => f.type === 'Expense' && (isSuperAdmin || f.district === defaultDistrictId)).reduce((a,c) => a+c.amount,0)
       };
     }
-    const found = districts.find(d => d.id === selectedDistrictId);
+    const found = accessibleDistricts.find(d => d.id === selectedDistrictId) || districts.find(d => d.id === selectedDistrictId);
     if (!found) return districts[0];
     
     // Add dynamically submitted form metrics to calculations
@@ -431,7 +470,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
       income: found.income + localIncome,
       expenses: found.expenses + localExpense
     };
-  }, [selectedDistrictId, districts, members, events, documents, finance]);
+  }, [selectedDistrictId, districts, accessibleDistricts, members, events, documents, finance, isSuperAdmin, defaultDistrictId]);
 
   // Handle Approvals
   const approveMember = (id: string) => {
@@ -463,7 +502,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setMembers(prev => [freshMember, ...prev]);
     setQuickActionModal(null);
-    setNewMember({ name: '', email: '', college: '', role: '', district: 'sambhajinagar' });
+    setNewMember({ name: '', email: '', college: '', role: '', district: defaultFormDistrict });
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
@@ -479,7 +518,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setEvents(prev => [freshEvent, ...prev]);
     setQuickActionModal(null);
-    setNewEvent({ title: '', category: '', date: '', district: 'sambhajinagar' });
+    setNewEvent({ title: '', category: '', date: '', district: defaultFormDistrict });
   };
 
   const handleAddDoc = (e: React.FormEvent) => {
@@ -496,7 +535,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setDocuments(prev => [freshDoc, ...prev]);
     setQuickActionModal(null);
-    setNewDoc({ title: '', category: '', district: 'sambhajinagar', author: '' });
+    setNewDoc({ title: '', category: '', district: defaultFormDistrict, author: '' });
   };
 
   const handleAddFinance = (e: React.FormEvent) => {
@@ -513,7 +552,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setFinance(prev => [freshFin, ...prev]);
     setQuickActionModal(null);
-    setNewFin({ type: 'Income', amount: '', category: '', district: 'sambhajinagar', desc: '' });
+    setNewFin({ type: 'Income', amount: '', category: '', district: defaultFormDistrict, desc: '' });
   };
 
   const handleAddActivity = (e: React.FormEvent) => {
@@ -532,7 +571,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setActivities(prev => [freshActivity, ...prev]);
     setQuickActionModal(null);
-    setNewActivity({ title: '', category: 'Social Activity', district: 'sambhajinagar', volunteersCount: '', audienceReached: '', outcome: '' });
+    setNewActivity({ title: '', category: 'Social Activity', district: defaultFormDistrict, volunteersCount: '', audienceReached: '', outcome: '' });
   };
 
   const handleAddNews = (e: React.FormEvent) => {
@@ -551,7 +590,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setNews(prev => [freshNews, ...prev]);
     setQuickActionModal(null);
-    setNewNews({ title: '', category: 'Press Release', district: 'sambhajinagar', author: '', body: '' });
+    setNewNews({ title: '', category: 'Press Release', district: defaultFormDistrict, author: '', body: '' });
   };
 
   const handleAddGalleryImage = (e: React.FormEvent) => {
@@ -568,7 +607,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
     };
     setGalleryImages(prev => [freshGallery, ...prev]);
     setQuickActionModal(null);
-    setNewGalleryImage({ caption: '', district: 'sambhajinagar', imageUrl: '', category: 'Social March' });
+    setNewGalleryImage({ caption: '', district: defaultFormDistrict, imageUrl: '', category: 'Social March' });
   };
 
   // Filter lists based on selected district and search query
@@ -654,7 +693,9 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
               </span>
             </div>
             <h1 className="font-sans font-black text-lg text-[#001847] mt-0.5">
-              {activeLang === 'EN' ? 'Super Admin Workspace' : 'मुख्य प्रशासकीय मंच'}
+              {isSuperAdmin
+                ? (activeLang === 'EN' ? 'Super Admin Workspace' : 'मुख्य प्रशासकीय मंच')
+                : (activeLang === 'EN' ? 'District Admin Workspace' : 'जिल्हा प्रशासकीय मंच')}
             </h1>
           </div>
         </div>
@@ -723,11 +764,11 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
           {/* Connected User Badge */}
           <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
             <div className="w-8 h-8 rounded-full bg-[#001847] text-orange-400 font-extrabold text-xs flex items-center justify-center shadow-inner uppercase">
-              SA
+              {userInitials}
             </div>
             <div className="hidden xl:block text-left">
-              <p className="font-bold text-xs text-[#001847] leading-none">Super Administrator</p>
-              <p className="text-[10px] text-slate-400 mt-1">State IT Command Cell</p>
+              <p className="font-bold text-xs text-[#001847] leading-none">{session.displayName}</p>
+              <p className="text-[10px] text-slate-400 mt-1">{session.officeLabel}</p>
             </div>
           </div>
 
@@ -750,30 +791,30 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
               </span>
               
               <div className="space-y-1.5 font-sans">
-                {/* All Prant Node */}
-                <button 
-                  onClick={() => setSelectedDistrictId('all')}
-                  className={`w-full text-left flex items-center justify-between p-2 rounded-xl text-xs font-bold transition-all ${
-                    selectedDistrictId === 'all' 
-                      ? 'bg-[#001847] text-white shadow-md' 
-                      : 'text-[#001847] hover:bg-slate-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Shield className={`h-4 w-4 ${selectedDistrictId === 'all' ? 'text-orange-400' : 'text-[#fc820c]'}`} />
-                    <span>{activeLang === 'EN' ? 'ABVP Deogiri Prant' : 'अभाविप देवगिरी प्रांत'}</span>
-                  </div>
-                  {selectedDistrictId === 'all' && <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>}
-                </button>
+                {isSuperAdmin && (
+                  <button 
+                    onClick={() => selectDistrict('all')}
+                    className={`w-full text-left flex items-center justify-between p-2 rounded-xl text-xs font-bold transition-all ${
+                      selectedDistrictId === 'all' 
+                        ? 'bg-[#001847] text-white shadow-md' 
+                        : 'text-[#001847] hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Shield className={`h-4 w-4 ${selectedDistrictId === 'all' ? 'text-orange-400' : 'text-[#fc820c]'}`} />
+                      <span>{activeLang === 'EN' ? 'ABVP Deogiri Prant' : 'अभाविप देवगिरी प्रांत'}</span>
+                    </div>
+                    {selectedDistrictId === 'all' && <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>}
+                  </button>
+                )}
 
-                {/* Sub Tree of Districts */}
-                <div className="pl-2 border-l-2 border-slate-100/80 space-y-1 pt-1">
-                  {districts.map(d => {
+                <div className={`${isSuperAdmin ? 'pl-2 border-l-2 border-slate-100/80' : ''} space-y-1 pt-1`}>
+                  {accessibleDistricts.map(d => {
                     const isSelected = selectedDistrictId === d.id;
                     return (
                       <button 
                         key={d.id}
-                        onClick={() => setSelectedDistrictId(d.id)}
+                        onClick={() => selectDistrict(d.id)}
                         className={`w-full text-left flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                           isSelected 
                             ? 'bg-[#fc820c] text-white font-bold shadow-sm' 
@@ -870,9 +911,9 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
               </div>
 
               {/* Dynamic Context Button to Reset to complete Prant */}
-              {selectedDistrictId !== 'all' && (
+              {isSuperAdmin && selectedDistrictId !== 'all' && (
                 <button 
-                  onClick={() => setSelectedDistrictId('all')}
+                  onClick={() => selectDistrict('all')}
                   className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Shield className="h-4 w-4 text-orange-400" />
@@ -984,16 +1025,19 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           {t.interactiveMap}
                         </h4>
                         <p className="text-slate-400 text-xs font-light mt-0.5">
-                          {activeLang === 'EN' 
-                            ? 'Click on any district to instantly view concentrated local statistics & database metrics.'
-                            : 'विशिष्ट स्थानिक आकडेवारी पाहण्यासाठी कोणत्याही जिल्ह्यावर क्लिक करा.'}
+                          {isSuperAdmin
+                            ? (activeLang === 'EN' 
+                              ? 'Click on any district to instantly view concentrated local statistics & database metrics.'
+                              : 'विशिष्ट स्थानिक आकडेवारी पाहण्यासाठी कोणत्याही जिल्ह्यावर क्लिक करा.')
+                            : (activeLang === 'EN'
+                              ? 'You are viewing your assigned district dashboard only.'
+                              : 'आपण फक्त आपल्या जिल्ह्याचा डॅशबोर्ड पाहत आहात.')}
                         </p>
                       </div>
 
-                      {/* Render Interactive Map Grid representing Marathwada Map */}
                       <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[340px] relative overflow-hidden">
                         
-                        {/* Legend */}
+                        {isSuperAdmin && (
                         <div className="absolute top-4 left-4 bg-white/95 border border-slate-200 p-2.5 rounded-xl text-[10px] shadow-sm z-10 space-y-1">
                           <p className="font-bold text-[#001847]">Map Indicators</p>
                           <div className="flex items-center gap-1.5">
@@ -1005,13 +1049,13 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                             <span>Active Hub</span>
                           </div>
                         </div>
+                        )}
 
-                        {/* Geographic representation layout */}
+                        {isSuperAdmin ? (
                         <div className="grid grid-cols-3 gap-3 w-full max-w-md relative">
                           
-                          {/* Row 1 */}
                           <button 
-                            onClick={() => setSelectedDistrictId('sambhajinagar')}
+                            onClick={() => selectDistrict('sambhajinagar')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'sambhajinagar'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1023,7 +1067,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </button>
 
                           <button 
-                            onClick={() => setSelectedDistrictId('jalna')}
+                            onClick={() => selectDistrict('jalna')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'jalna'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1035,7 +1079,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </button>
 
                           <button 
-                            onClick={() => setSelectedDistrictId('hingoli')}
+                            onClick={() => selectDistrict('hingoli')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'hingoli'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1046,9 +1090,8 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                             <span className="text-[9px] opacity-70">1,350 Actives</span>
                           </button>
 
-                          {/* Row 2 */}
                           <button 
-                            onClick={() => setSelectedDistrictId('beed')}
+                            onClick={() => selectDistrict('beed')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'beed'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1060,7 +1103,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </button>
 
                           <button 
-                            onClick={() => setSelectedDistrictId('parbhani')}
+                            onClick={() => selectDistrict('parbhani')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'parbhani'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1072,7 +1115,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </button>
 
                           <button 
-                            onClick={() => setSelectedDistrictId('nanded')}
+                            onClick={() => selectDistrict('nanded')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'nanded'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1083,11 +1126,10 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                             <span className="text-[9px] opacity-70">3,410 Actives</span>
                           </button>
 
-                          {/* Row 3 */}
                           <div className="invisible"></div>
 
                           <button 
-                            onClick={() => setSelectedDistrictId('dharashiv')}
+                            onClick={() => selectDistrict('dharashiv')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'dharashiv'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1099,7 +1141,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </button>
 
                           <button 
-                            onClick={() => setSelectedDistrictId('latur')}
+                            onClick={() => selectDistrict('latur')}
                             className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center transition-all ${
                               selectedDistrictId === 'latur'
                                 ? 'bg-[#001847] text-white border-orange-500 shadow-lg scale-102'
@@ -1111,16 +1153,33 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </button>
 
                         </div>
+                        ) : (
+                        <div className="w-full max-w-sm">
+                          <div className="p-8 border-2 border-[#001847] bg-[#001847] text-white rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                            <MapPin className="h-8 w-8 text-orange-400 mb-3" />
+                            <span className="font-black text-lg text-center">
+                              {activeLang === 'EN' ? activeDistrict.nameEN : activeDistrict.nameMR}
+                            </span>
+                            <span className="text-[11px] opacity-80 mt-2">
+                              {activeDistrict.activeMembers.toLocaleString()} {activeLang === 'EN' ? 'Active Members' : 'सक्रिय सदस्य'}
+                            </span>
+                            <span className="text-[10px] bg-white/10 px-3 py-1 rounded-full mt-4 uppercase tracking-wider">
+                              {activeLang === 'EN' ? 'Your District' : 'आपला जिल्हा'}
+                            </span>
+                          </div>
+                        </div>
+                        )}
 
-                        {/* Reset Map triggers */}
+                        {isSuperAdmin && (
                         <div className="mt-4">
                           <button 
-                            onClick={() => setSelectedDistrictId('all')}
+                            onClick={() => selectDistrict('all')}
                             className="text-xs font-bold text-[#001847] hover:text-[#fc820c] underline"
                           >
                             {activeLang === 'EN' ? 'View Entire Deogiri Prant' : 'संपूर्ण देवगिरी प्रांत आकडे पहा'}
                           </button>
                         </div>
+                        )}
 
                       </div>
                     </div>
@@ -1948,8 +2007,8 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                       </div>
 
                       <div className="w-full flex items-end justify-between h-48 pt-4 px-2 border-b border-slate-100">
-                        {districts.map(d => {
-                          const maxMembers = Math.max(...districts.map(x => x.totalMembers));
+                        {accessibleDistricts.map(d => {
+                          const maxMembers = Math.max(...accessibleDistricts.map(x => x.totalMembers));
                           const barHeightPercent = (d.totalMembers / maxMembers) * 100;
                           return (
                             <div key={d.id} className="flex flex-col items-center group w-full">
@@ -1978,8 +2037,8 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                       </div>
 
                       <div className="space-y-3">
-                        {districts.slice(0, 5).map(d => {
-                          const maxIncome = Math.max(...districts.map(x => x.income));
+                        {accessibleDistricts.slice(0, 5).map(d => {
+                          const maxIncome = Math.max(...accessibleDistricts.map(x => x.income));
                           const incomeWidth = (d.income / maxIncome) * 100;
                           const expenseWidth = (d.expenses / maxIncome) * 100;
                           return (
@@ -2025,7 +2084,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50 text-slate-700 font-light">
-                          {districts.map(d => (
+                          {accessibleDistricts.map(d => (
                             <tr key={d.id} className="hover:bg-slate-50/50 transition-colors">
                               <td className="p-4 font-bold uppercase text-[#001847]">{d.nameEN}</td>
                               <td className="p-4 font-bold">{d.totalMembers.toLocaleString()}</td>
@@ -2260,7 +2319,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                         onChange={(e) => setNewMember(prev => ({ ...prev, district: e.target.value }))}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                       >
-                        {districts.map(d => (
+                        {accessibleDistricts.map(d => (
                           <option key={d.id} value={d.id}>{d.nameEN}</option>
                         ))}
                       </select>
@@ -2324,7 +2383,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                       onChange={(e) => setNewEvent(prev => ({ ...prev, district: e.target.value }))}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                     >
-                      {districts.map(d => (
+                      {accessibleDistricts.map(d => (
                         <option key={d.id} value={d.id}>{d.nameEN}</option>
                       ))}
                     </select>
@@ -2429,7 +2488,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                       onChange={(e) => setNewDoc(prev => ({ ...prev, district: e.target.value }))}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                     >
-                      {districts.map(d => (
+                      {accessibleDistricts.map(d => (
                         <option key={d.id} value={d.id}>{d.nameEN}</option>
                       ))}
                     </select>
@@ -2536,7 +2595,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                         onChange={(e) => setNewFin(prev => ({ ...prev, district: e.target.value }))}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                       >
-                        {districts.map(d => (
+                        {accessibleDistricts.map(d => (
                           <option key={d.id} value={d.id}>{d.nameEN}</option>
                         ))}
                       </select>
@@ -2598,7 +2657,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                         onChange={(e) => setNewActivity(prev => ({ ...prev, district: e.target.value }))}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                       >
-                        {districts.map(d => (
+                        {accessibleDistricts.map(d => (
                           <option key={d.id} value={d.id}>{d.nameEN}</option>
                         ))}
                       </select>
@@ -2756,7 +2815,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                         onChange={(e) => setNewGalleryImage(prev => ({ ...prev, district: e.target.value }))}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                       >
-                        {districts.map(d => (
+                        {accessibleDistricts.map(d => (
                           <option key={d.id} value={d.id}>{d.nameEN}</option>
                         ))}
                       </select>
@@ -2819,7 +2878,7 @@ export default function AdminDashboard({ activeLang, onLogout }: AdminDashboardP
                       onChange={(e) => setNewNews(prev => ({ ...prev, district: e.target.value }))}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs focus:ring-2 focus:ring-[#001847] outline-none cursor-pointer"
                     >
-                      {districts.map(d => (
+                      {accessibleDistricts.map(d => (
                         <option key={d.id} value={d.id}>{d.nameEN}</option>
                       ))}
                     </select>

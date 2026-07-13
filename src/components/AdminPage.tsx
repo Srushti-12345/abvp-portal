@@ -5,20 +5,21 @@ import {
   Network, MapPin, PieChart, Users, Wallet, Megaphone, UploadCloud, Info, CheckCircle2,
   X, Lock, ArrowRight, AlertCircle, RefreshCw
 } from 'lucide-react';
-import AdminDashboard from './AdminDashboard';
+import AdminDashboard, { AdminSession } from './AdminDashboard';
+import { ADMIN_CREDENTIALS, matchAdminCredential } from '../adminCredentials';
 
 interface AdminPageProps {
   activeLang: 'EN' | 'MR';
   onBackToHome?: () => void;
 }
 
-// Super Admin Login configuration
-// Toggle SHOW_DEMO_BYPASS to false when deploying the system to actual users to hide the instant bypass button.
-const SHOW_DEMO_BYPASS = true;
+const DUMMY_ADMIN_CREDENTIALS = ADMIN_CREDENTIALS;
 
 export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) {
   // Login states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [adminSession, setAdminSession] = useState<AdminSession | null>(null);
+  const [pendingSession, setPendingSession] = useState<AdminSession | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -79,7 +80,27 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
       return;
     }
     
-    // Simulate opening OTP modal
+    const matchedCredential = matchAdminCredential(email, password);
+
+    if (!matchedCredential) {
+      triggerNotification(
+        'error',
+        activeLang === 'EN' ? 'Invalid Credentials' : 'चुकीची लॉगिन माहिती',
+        activeLang === 'EN'
+          ? 'Check email and password exactly. Example: beed.admin@abvpdeogiri.org / admin123'
+          : 'ईमेल आणि पासवर्ड अचूक टाका. उदा: beed.admin@abvpdeogiri.org / admin123'
+      );
+      return;
+    }
+
+    setPendingSession({
+      role: matchedCredential.role,
+      districtId: matchedCredential.districtId,
+      displayName: matchedCredential.displayName,
+      officeLabel: matchedCredential.officeLabel,
+    });
+
+    // Simulate opening OTP modal after valid local credentials
     setShowOtpModal(true);
     setOtpValues(['', '', '', '', '', '']);
     setTimeout(() => {
@@ -99,6 +120,16 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
       return;
     }
 
+    if (!pendingSession) {
+      setShowOtpModal(false);
+      triggerNotification(
+        'error',
+        activeLang === 'EN' ? 'Session Expired' : 'à¤¸à¤¤à¥à¤° à¤¸à¤®à¤¾à¤ªà¥à¤¤',
+        activeLang === 'EN' ? 'Please enter your credentials again.' : 'à¤•à¥ƒà¤ªà¤¯à¤¾ à¤²à¥‰à¤—à¤¿à¤¨ à¤®à¤¾à¤¹à¤¿à¤¤à¥€ à¤ªà¥à¤¨à¥à¤¹à¤¾ à¤Ÿà¤¾à¤•à¤¾.'
+      );
+      return;
+    }
+
     // Success simulation
     triggerNotification(
       'success',
@@ -108,6 +139,8 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
     setShowOtpModal(false);
     setEmail('');
     setPassword('');
+    setAdminSession(pendingSession);
+    setPendingSession(null);
     setIsLoggedIn(true);
   };
 
@@ -162,8 +195,18 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
     }
   };
 
-  if (isLoggedIn) {
-    return <AdminDashboard activeLang={activeLang} onLogout={() => setIsLoggedIn(false)} />;
+  if (isLoggedIn && adminSession) {
+    return (
+      <AdminDashboard
+        activeLang={activeLang}
+        session={adminSession}
+        onLogout={() => {
+          setIsLoggedIn(false);
+          setAdminSession(null);
+          setPendingSession(null);
+        }}
+      />
+    );
   }
 
   return (
@@ -285,9 +328,11 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
                 <div className="relative">
                   <AtSign className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
                   <input 
-                    type="email"
+                    type="text"
+                    inputMode="email"
+                    autoComplete="username"
                     required
-                    placeholder="admin@abvpdeogiri.org"
+                    placeholder="beed.admin@abvpdeogiri.org"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-[#001847] focus:border-transparent transition-all outline-none"
@@ -349,26 +394,34 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
                 <span>{activeLang === 'EN' ? 'Proceed Securely' : 'सुरक्षितपणे पुढे जा'}</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
-
-              {SHOW_DEMO_BYPASS && (
-                <button 
-                  type="button"
-                  onClick={() => {
-                    triggerNotification(
-                      'success',
-                      activeLang === 'EN' ? 'Bypass Verification Successful' : 'सुलभ प्रवेश यशस्वी',
-                      activeLang === 'EN' ? 'Entering Super Admin Console...' : 'मुख्य प्रशासकीय डॅशबोर्डमध्ये प्रवेश करत आहे...'
-                    );
-                    setTimeout(() => {
-                      setIsLoggedIn(true);
-                    }, 500);
-                  }}
-                  className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer animate-pulse"
-                >
-                  <span>{activeLang === 'EN' ? 'Direct Demo Login (Super Admin)' : 'थेट डेमो लॉगिन (मुख्य डॅशबोर्ड)'}</span>
-                  <Shield className="h-4 w-4" />
-                </button>
-              )}
+              <div className="rounded-2xl border border-orange-100 bg-orange-50/50 p-4 text-[11px] text-slate-600 leading-relaxed space-y-1">
+                <p className="font-black text-[#001847] uppercase tracking-widest mb-2">
+                  {activeLang === 'EN' ? 'Temporary Credentials' : 'तात्पुरती लॉगिन माहिती'}
+                </p>
+                <p>
+                  <button
+                    type="button"
+                    onClick={() => { setEmail('superadmin@abvpdeogiri.org'); setPassword('super123'); }}
+                    className="text-left hover:text-[#fc820c] transition-colors"
+                  >
+                    <span className="font-bold">Superadmin:</span> superadmin@abvpdeogiri.org / super123
+                  </button>
+                </p>
+                {DUMMY_ADMIN_CREDENTIALS.filter(c => c.role === 'admin').map(c => (
+                  <p key={c.email}>
+                    <button
+                      type="button"
+                      onClick={() => { setEmail(c.email); setPassword(c.password); }}
+                      className="text-left hover:text-[#fc820c] transition-colors"
+                    >
+                      <span className="font-bold">{c.displayName}:</span> {c.email} / admin123
+                    </button>
+                  </p>
+                ))}
+                <p className="text-slate-400 mt-1">
+                  {activeLang === 'EN' ? 'Click any credential above to auto-fill. Enter any 6 digits for OTP.' : 'वर क्लिक करून माहिती भरा. OTP साठी कोणतेही ६ अंक टाका.'}
+                </p>
+              </div>
 
               <div className="relative flex items-center py-2">
                 <div className="flex-grow border-t border-slate-100"></div>
@@ -815,3 +868,4 @@ export default function AdminPage({ activeLang, onBackToHome }: AdminPageProps) 
     </div>
   );
 }
+

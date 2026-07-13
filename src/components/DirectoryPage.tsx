@@ -6,6 +6,16 @@ import {
   Bell, Sparkles, Map, GraduationCap, Info, ShieldCheck, 
   HelpCircle, ChevronRight, X, Phone, Mail, FileText
 } from 'lucide-react';
+import empoweringStudentsImage from '../../assets/empowring-students.jpg';
+import bamuImage from '../../assets/BAMU.jpg';
+import srtmuImage from '../../assets/SRTMU.jpeg';
+import gmcImage from '../../assets/GMC.webp';
+import jecImage from '../../assets/JEC.avif';
+import deogiriCollegeImage from '../../assets/Deogiri-college-science-arts.jpg';
+import boysHostelImage from '../../assets/boys-hostel.avif';
+import girlsHostelImage from '../../assets/girls-hostel.avif';
+import governmentPolytechnicImage from '../../assets/gov-polytecnic.avif';
+import shahuHostelImage from '../../assets/shahu-maharaj-hostel.jpg';
 
 interface DirectoryPageProps {
   activeLang: 'EN' | 'MR';
@@ -54,6 +64,14 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
         localStorage.removeItem('navTabTarget');
       }
 
+      if (!tId && (scrollId === undefined || scrollId === '')) {
+        setSearchQuery('');
+        setSelectedDivision('All');
+        setSelectedDistrict('All');
+        setSelectedCategory('All');
+        setSelectedInstitution(null);
+      }
+
       if (sId) {
         localStorage.removeItem('navScrollTarget');
         const element = document.getElementById(sId);
@@ -99,7 +117,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'मराठवाडा विभागातील शैक्षणिक गरजा पूर्ण करणारे महाराष्ट्रातील सर्वात जुन्या आणि नामांकित राज्य विद्यापीठांपैकी एक.',
       address: 'University Campus, Near Soneri Mahal, Chhatrapati Sambhajinagar - 431004',
       addressMr: 'विद्यापीठ परिसर, सोनेरी महाल जवळ, छत्रपती संभाजीनगर - ४३१००४',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVHbSiNqcjuSi7lamYB78QNE3H8H6wi8Wa671PAgqBMBQtqIsxg8Kei9wCnCggq32kcat9FA51WF8oi9ymT_sV3mEG1GXuRXCxyU9DKb9meATYxgiMevBah0d_lB3DwqivIeVrrzL5dsCaoX4yYr4BQldhsU19ldlCIOmliuGkyxMyp-AHaeav234CApxDufYehu9OIr0mX00fWuNhpb9wdBjWu9kZ4sTRCm81BlduDcFvGWPPaCz52NUSJc6lxZyCUWDLkpa_PClp',
+      image: bamuImage,
       website: 'https://www.bamu.ac.in',
       phone: '+91 240 2403399',
       email: 'registrar@bamu.ac.in',
@@ -120,7 +138,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'देवगिरी प्रदेशातील दक्षिण जिल्ह्यांना सेवा देणारे, अत्याधुनिक संशोधन, पदव्युत्तर अभ्यासक्रम आणि व्यावसायिक कार्यक्रम देणारे विद्यापीठ.',
       address: 'Vishnupuri, Nanded - 431606',
       addressMr: 'विष्णूपुरी, नांदेड - ४३१६०६',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDNwaWTR24xuB3ug0jyrI9k-pu1t3-WjYzWWA0aeoI7tVPDU72fErmTBECFQLEwhuxf1W3BtWryTH2KCavs_8f7j1Zg00AJtxOozMy5_9G7mwLKSdr2YSChCYSnC44CZqET4Q8_TRx5H_TckGr44dYEPPLP9DU3YnsBfI5gb32vZdgOIkgHucmy5THSvTl1IClNKfEuvhlU2MnOLecamtpmmHS6ZfFrIT3J-1HtXVT6ts8iPSu_uRPirW5-q0HGy5snNvQBqjt66out',
+      image: srtmuImage,
       website: 'https://www.srtmun.ac.in',
       phone: '+91 2462 229242',
       email: 'info@srtmun.ac.in',
@@ -141,7 +159,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'लातूरचे अग्रगण्य शासकीय वैद्यकीय शिक्षण केंद्र जे अत्याधुनिक प्रयोगशाळा आणि बहु-विशेषोपचार रुग्णालय युनिट्सने सुसज्ज आहे.',
       address: 'Near Gandhi Chowk, Latur - 413512',
       addressMr: 'गांधी चौक जवळ, लातूर - ४१३५१२',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDUIGpSDB1KZDkNgj2QDXN53U8Sbf2gk576Gllq3BUX-OrcpnG4MQp66g7DHVhHMtlQDrinu_DlgH2_oF0d1V90yRR5x2u5mLAaC2Y75qEbaL6v8UPVcb9yz9gxgRkNlwaD7rpVzb49gWvQjhM2V6U8MN42nlMYRDbRru1Bt3mm5SrbLfCaz9XzDaCGsEjDO7m94g6H9eybdO7XHGKXHxov8coYSYI-NnLTLBQjbg5dla8kN9xcUY7GX0Y-tFxcyfVN1Fb3d9WWTpzV',
+      image: gmcImage,
       website: 'https://www.gmclatur.org',
       phone: '+91 2382 253032',
       email: 'gmc_latur@rediffmail.com',
@@ -162,7 +180,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'औद्योगिक उत्कृष्टता, कौशल्य-आधारित अभियांत्रिकी अभ्यासक्रम आणि प्लेसमेंटवर लक्ष केंद्रित करणारी आघाडीची तांत्रिक शिक्षण संस्था.',
       address: 'Industrial Area Phase 3, Jalna - 431203',
       addressMr: 'औद्योगिक क्षेत्र फेज ३, जालना - ४३१२०३',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBc-IKjziuKSmN9LQlKW3VoGiDQSdrhwmzP0H-U5tUdciFYOfzaOzZbkLv0o2ex3dwVbF8xlPtjW2oJfFIVnNiOHECOPJwnJ1Kcm_mdwTPpAJY89rrXdQNgGtbDaqBlKtEDZ9GNW8GsxoT67lpSqIHxtrCwJSfLqV6lZgLw73oM01yH2moUvfyGi-PWMgcXrPj-f8iEsFEMJqIVShycOGmIdHJTtv8KsX2BWlm5OE5CI3mK_83J05JvkmN1nnukVz1uB9vWt8UBJyYK',
+      image: jecImage,
       website: 'https://www.jecjalna.edu.in',
       phone: '+91 2482 225341',
       email: 'contact@jecjalna.edu.in',
@@ -183,7 +201,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'शैक्षणिक, क्रीडा आणि सांस्कृतिक क्षेत्रातील वारशासाठी ओळखले जाणारे छत्रपती संभाजीनगरमधील प्रमुख शैक्षणिक केंद्र.',
       address: 'Railway Station Road, Chhatrapati Sambhajinagar - 431005',
       addressMr: 'रेल्वे स्टेशन रोड, छत्रपती संभाजीनगर - ४३१००५',
-      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&auto=format&fit=crop&q=80',
+      image: deogiriCollegeImage,
       website: 'https://www.deogiricollege.org',
       phone: '+91 240 2367333',
       email: 'deogiricollege@yahoo.co.in',
@@ -204,7 +222,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'समाजकल्याण विभागातील विद्यार्थ्यांसाठी निवासी, भोजन आणि वाचनालय सुविधा देणारे पूर्णतः अनुदानित शासकीय वसतिगृह.',
       address: 'Subhedar Kabar Area, Cantonment, Chhatrapati Sambhajinagar',
       addressMr: 'सुभेदार कबर परिसर, कॅन्टोन्मेंट, छत्रपती संभाजीनगर',
-      image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&auto=format&fit=crop&q=80',
+      image: boysHostelImage,
       website: '#',
       phone: '+91 240 2300451',
       email: 'swd.aurangabad@maharashtra.gov.in',
@@ -225,7 +243,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'लातूर जिल्ह्यात उच्च शिक्षण घेऊ इच्छिणाऱ्या विद्यार्थिनींसाठी समर्पित सुरक्षित निवास आणि उच्च दर्जाचे भोजन सुविधा.',
       address: 'Ausa Road, Near Rajiv Gandhi Park, Latur',
       addressMr: 'औसा रोड, राजीव गांधी पार्क जवळ, लातूर',
-      image: 'https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=600&auto=format&fit=crop&q=80',
+      image: girlsHostelImage,
       website: '#',
       phone: '+91 2382 245991',
       email: 'swd.latur@maharashtra.gov.in',
@@ -246,7 +264,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'उच्च दर्जाचे तांत्रिक शिक्षण आणि मेकॅनिकल प्रयोगशाळा प्रणाली प्रदान करणारी राज्य मालकीची अभियांत्रिकी पदविका संस्था.',
       address: 'Nagar Road, Beed - 431122',
       addressMr: 'नगर रोड, बीड - ४३११२२',
-      image: 'https://images.unsplash.com/photo-1562774053-701939374585?w=600&auto=format&fit=crop&q=80',
+      image: governmentPolytechnicImage,
       website: 'https://www.gpbeed.ac.in',
       phone: '+91 2442 222609',
       email: 'office.gpbeed@dtemaharashtra.gov.in',
@@ -267,7 +285,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
       descriptionMr: 'ग्रामीण भागातून येणाऱ्या स्थलांतरित विद्यार्थ्यांसाठी परवडणारे निवासी आणि वाचनालय सुविधा.',
       address: 'Solapur Road, Dharashiv - 413501',
       addressMr: 'सोलापूर रोड, धाराशिव - ४१३५०१',
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=80',
+      image: shahuHostelImage,
       website: '#',
       phone: '+91 2472 222452',
       email: 'swd.osmanabad@maharashtra.gov.in',
@@ -595,7 +613,7 @@ export default function DirectoryPage({ activeLang, onJoinClick }: DirectoryPage
           <div className="relative">
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-orange-500/10 rounded-full blur-3xl" />
             <img 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVlkzIwprUGJv839rMa-zOy7N2RcRc9CtufcfdofT0RW87ruB-2oX9ZMHz2AFAj8R1ntv4Xd0Ubdhcb3tvDfuT083EZuj-MPvU_CJKNHc2WucUgHXaomZz76Ap_09NpeziTEUtSoPcNK2IINucgVakBnXnxF1bcb9t6N6qZhrKmYbMi46tnWRIj9EolORX7dEfltZIFOJ_cVWpoG3YctX9qo02iEP2OuiYjKs6y0KhQB5spfa1wBWZjRnEa7qQ4aQLgVeVf8DwoaVC"
+              src={empoweringStudentsImage}
               alt="Students Educational Planning"
               className="rounded-2xl shadow-2xl relative z-10 w-full h-[450px] object-cover border-4 border-white"
             />

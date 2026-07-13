@@ -5,6 +5,9 @@ import {
   ArrowRight, Download, Eye, ExternalLink, Info, CheckCircle2, 
   X, Sparkles, Youtube, Newspaper, Bell, HelpCircle
 } from 'lucide-react';
+import mediaHeroImage from '../../assets/media.jpg';
+import mediaInfoImage from '../../assets/info.jpg';
+import mediaInfoSecondaryImage from '../../assets/info2.jpg';
 
 interface MediaPageProps {
   activeLang: 'EN' | 'MR';
@@ -296,8 +299,7 @@ export default function MediaPage({ activeLang, onJoinClick }: MediaPageProps) {
           <img 
             alt="ABVP Student Leadership Summit" 
             className="w-full h-full object-cover scale-105 transition-all duration-[10000ms]" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvKEO4G7MFH3Y3MgcumPpJgYh-9hdiZE1d7u82zZl4-7vgYI6Nhk7HUL1RUeGgRjG9y3ZdmlENIxUtWjLzsWdUT7e8iwcGG4ztMbqmBibCAysz7_ZUFFKGW1pGlG1HNgc2HhjHASFItI7RHRN-hnlgkzzu07eNVhMislMpkmlebWSqQyHXMfat0JPpg9Re1f0QrpM1vYVqt9yY55sOlKflRlIaisPgvgBqbMnXp5PWv4gVYrXYgqAN6qKFj7f5guD5pYVcpzujd3vm" 
-            referrerPolicy="no-referrer"
+            src={mediaHeroImage}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#001847]/95 via-[#001847]/75 to-[#001847]/45"></div>
         </div>
@@ -408,14 +410,14 @@ export default function MediaPage({ activeLang, onJoinClick }: MediaPageProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-2xl overflow-hidden shadow-md">
               <img 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXu-eGTfZAYsh97zeMfoXZrJXp-mZVmLEECxEuSz6BCRpuPColezbMCY7JP188uchRV_kxvRAOPw1h2_VHFOmkF3dQvMZT6g5PB0dNckNEVylyOGuHf9CmL8YXSV2Dsnx3TEwhouVyG7buyurFujo22WODFOwz9bPGmJ9V3JJeH4YwaJc4lGk5EXIe3HEyemZGq1FdTEq0tGxBSjYtfn5ZanM2R7hzC_00GpnqS9EsXlz926WZ3gx3GyLLQn9F0k6_1AQd_lQrTyIMxx" 
+                src={mediaInfoImage} 
                 alt="Policy Report" 
                 className="w-full h-full object-cover aspect-square hover:scale-103 transition-transform"
               />
             </div>
             <div className="rounded-2xl overflow-hidden shadow-md mt-8">
               <img 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCsnPTZcsZiFicbR5xJ4BhLz7FiotemjeXOBUj76jEoUtCKxVCYNyIyiCy32UohEfIWHcd-dgtRJWrytF-IHMFKNY-E0zD_FwMjCR0mbDswNP2LAbquFDZdXiYSe7_0IUjziEBFdqgOd6waBAS_0MFBenE83fze6wVWWAuq7hzAnDUAkkqZnYCPe4CKq9ndKkAsuF7wSG8hDpaxEX1P9jfGLAxdBUJzo_6IjZw0JxKPEpQiMG1wNLvjE9964YPYt2O_cldsPLODcu9" 
+                src={mediaInfoSecondaryImage} 
                 alt="Student Activists Discussion" 
                 className="w-full h-full object-cover aspect-square hover:scale-103 transition-transform"
               />

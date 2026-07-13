@@ -5,6 +5,11 @@ import {
   ChevronDown, GraduationCap, Trophy, Music, Landmark, Heart, HeartHandshake, Check,
   Leaf, BrainCircuit, Microscope, Stethoscope, Wheat, Award, Target, Calendar, X, ExternalLink, Flag
 } from 'lucide-react';
+import activityHeroImage from '../../assets/abvp main activity.jpg';
+import classroomDiscussionImage from '../../assets/student_collaboration_classroom_discussion.jpg';
+import greenCampusDriveImage from '../../assets/green-campus-drive.jpg';
+import classroomActivityImage from '../../assets/classroom.jpg';
+import activitiesGalleryImage from '../../assets/activitiies.jpg';
 
 interface ActivitiesPageProps {
   activeLang: 'EN' | 'MR';
@@ -40,6 +45,10 @@ export default function ActivitiesPage({ activeLang, onJoinClick }: ActivitiesPa
 
     const listener = (e: Event) => {
       const customEvent = e as CustomEvent;
+      if (customEvent.detail?.reset) {
+        setSelectedWing(null);
+        setActiveFaq(null);
+      }
       if (customEvent.detail) {
         handleNavigation(customEvent.detail.scrollTarget, customEvent.detail.tabTarget);
       }
@@ -275,8 +284,7 @@ export default function ActivitiesPage({ activeLang, onJoinClick }: ActivitiesPa
           <img 
             alt="ABVP Youth Rally Activities" 
             className="w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida/AP1WRLu4UXbIwTIJ2pd2-pgogwh3OUC_Yb2lV-njfiRABzH43RMNui7Zf6TV4i7-eIU2YYDVoysj1WtZuYoIjfO9IQ6ig1KE_vmVHqzj_NVNO2vYbKSxGoY7i9Dozk4hzrvaRzmEam9bmk80COedlwkCWEELvcD1q_7NS_3YGLMSrKjIPwkD5OVdoUIx1_bE-ulkAYcvVRMxoYEc5W_man_rk8bSL7-lNjpdiKh-wEiJYqFPBVVVL00pTKvCgYMN"
-            referrerPolicy="no-referrer"
+            src={activityHeroImage}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#001847]/90 to-[#001847]/40"></div>
         </div>
@@ -368,7 +376,7 @@ export default function ActivitiesPage({ activeLang, onJoinClick }: ActivitiesPa
           <div className="relative">
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-orange-500/10 rounded-full blur-3xl"></div>
             <img 
-              src="https://lh3.googleusercontent.com/aida/AP1WRLvDEYlgiY4mcz_gAZjdO6XmVNmYESzfTK06FLSVgyfgByU4JWWE9TvyxeGUL8ZRgnWb2zungC0svX-fnafaiG1YDq8rhqsoPEEGIxSIhlctiCynHC5HNj_LxVRZjAK4kjL9qo8SjOtEvvmo_tGhREAQyqO8arZu7ioEZZvfo_xui6t8By_YXthvo5JwGezYecpOciQoZI_9W82QZI3tVk5ZU4yXl_hW4-uCsMuBch9_LSG3vDzkGN71oqTa"
+              src={classroomDiscussionImage}
               alt="Students Collaboration Classroom discussion"
               className="rounded-2xl shadow-2xl relative z-10 w-full h-[500px] object-cover border-4 border-white"
             />
@@ -629,8 +637,7 @@ export default function ActivitiesPage({ activeLang, onJoinClick }: ActivitiesPa
               <img 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                 alt="Green Campus Drive" 
-                src="https://lh3.googleusercontent.com/aida/AP1WRLuaSwl3wKWDrCTN79LRvz9wmENUj6iN9Ms-fWq7iL9RgnW3CEG7cO4n0HU7-NIteIiQBHqvOMJqKx2cdhi0vhNnqiNxJKl03GNOddyJHFyEtrDaV2ncP9YRgYXfUzZZolN1yS7eK5Y7xy-DMs_x8hgdEObqIl6G5gEm8bL2Rs-JhlAyX-KwSFZrMvURkpEq8DjITvRBwiV7FO75VR2wk3YOZBqKj8r7pSrcnf2ehsw84VTYUT_d2r7AXKde"
-                referrerPolicy="no-referrer"
+                src={greenCampusDriveImage}
               />
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-8 text-left">
                 <h4 className="text-white text-xl font-bold">Green Campus Drive 2024</h4>
@@ -642,17 +649,15 @@ export default function ActivitiesPage({ activeLang, onJoinClick }: ActivitiesPa
               <div className="relative group overflow-hidden rounded-2xl">
                 <img 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                  alt="Jignasa Seminar Discussion" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBweqyJdhPKhw4LFlz3XfKxSHhMtEGnRbib0sq7okzVTpDQ7kI4GSUyMlXEmAujfD9ry7T8pnGBp_6jonHFPgq474HXS6-DIK2WLZZMfEN0YI8dqAJHY6_omwJhRQiHFdh-h00_djnc5lFtbKFWxuSc2-BKN3bCb_zWhHlKhOs62lKSCvHVuQivV85RfevMU26apZva9QoYcJ7d0M23bzXiHNV7dFh1rKGCRmaIjZVUxQfnnFMqI1GtZZXXniFx8ENNskEqQjoQIs0E"
-                  referrerPolicy="no-referrer"
+                  alt="Classroom Activity" 
+                  src={classroomActivityImage}
                 />
               </div>
               <div className="relative group overflow-hidden rounded-2xl">
                 <img 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                  alt="ABVP Youth Rally" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuATDMlQkvagZqooqjgynOr1_rNxNGyANYNDxtfx2of5fWf3A9ybs4BTDV3ymqcuFuhzEJ0Ef52Mq1CQS1ktA3d3jFotc9jfvV2kYGutz6K8zVA1zqy-m-rfZcI2ZRWGrPdAcJYWz4witlVuO1Un-W7kQsGN7MWsnFVjxUUhOYSVLxwZGqLsPsCwbFaDDrXDl1L-Tk4R8ayPRPRpkNQgOb-QGowrgfXJvob3sgtFrrInJ54SNqA9B4kvGULvw9jENXn3SzHGj1ca5xiQ"
-                  referrerPolicy="no-referrer"
+                  alt="ABVP Activities Gathering" 
+                  src={activitiesGalleryImage}
                 />
               </div>
             </div>
