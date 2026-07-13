@@ -119,7 +119,7 @@ export default function AboutPage({ activeLang, onJoinClick, onExploreOrgClick }
           <img 
             alt="ABVP Leadership Workshop" 
             className="w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida/AP1WRLu4UXbIwTIJ2pd2-pgogwh3OUC_Yb2lV-njfiRABzH43RMNui7Zf6TV4i7-eIU2YYDVoysj1WtZuYoIjfO9IQ6ig1KE_vmVHqzj_NVNO2vYbKSxGoY7i9Dozk4hzrvaRzmEam9bmk80COedlwkCWEELvcD1q_7NS_3YGLMSrKjIPwkD5OVdoUIx1_bE-ulkAYcvVRMxoYEc5W_man_rk8bSL7-lNjpdiKh-wEiJYqFPBVVVL00pTKvCgYMN"
+            src="public/about_hero.webp"
             referrerPolicy="no-referrer"
           />
         </div>
@@ -183,7 +183,7 @@ export default function AboutPage({ activeLang, onJoinClick, onExploreOrgClick }
               <img 
                 alt="Green Campus Drive" 
                 className="w-full h-full object-cover" 
-                src="https://lh3.googleusercontent.com/aida/AP1WRLvDEYlgiY4mcz_gAZjdO6XmVNmYESzfTK06FLSVgyfgByU4JWWE9TvyxeGUL8ZRgnWb2zungC0svX-fnafaiG1YDq8rhqsoPEEGIxSIhlctiCynHC5HNj_LxVRZjAK4kjL9qo8SjOtEvvmo_tGhREAQyqO8arZu7ioEZZvfo_xui6t8By_YXthvo5JwGezYecpOciQoZI_9W82QZI3tVk5ZU4yXl_hW4-uCsMuBch9_LSG3vDzkGN71oqTa"
+                src="public/home_img/news1.jpg"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -627,7 +627,7 @@ export default function AboutPage({ activeLang, onJoinClick, onExploreOrgClick }
               <img 
                 alt="Student Discussion Panel" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                src="https://lh3.googleusercontent.com/aida/AP1WRLuaSwl3wKWDrCTN79LRvz9wmENUj6iN9Ms-fWq7iL9RgnW3CEG7cO4n0HU7-NIteIiQBHqvOMJqKx2cdhi0vhNnqiNxJKl03GNOddyJHFyEtrDaV2ncP9YRgYXfUzZZolN1yS7eK5Y7xy-DMs_x8hgdEObqIl6G5gEm8bL2Rs-JhlAyX-KwSFZrMvURkpEq8DjITvRBwiV7FO75VR2wk3YOZBqKj8r7pSrcnf2ehsw84VTYUT_d2r7AXKde"
+                src="public/protest1.jpg"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -637,17 +637,17 @@ export default function AboutPage({ activeLang, onJoinClick, onExploreOrgClick }
               <img 
                 alt="Students tree plantation drive"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-pGN4qVMdh0Po1KWqDw-cRSXY8zE3LjvcdONaI7zVvdAZXyhZYC-gEeWNcHnGMBoNrTKkCW2pcIkwSV4P7CyNK6sxuDY2fV2wK0FJcNlZhTB8NU1py128GE88ZzZ2YNpFXUPdMONU62C0LGWpmK4tdHEmz8OOBFl1ohhyEvwqp9jWteT3BIQWwzadJ71r6JOexwkbnNDTp4edhjLwj0TaTORUKSXRAZ2CPnEXfsu0k31BTb_OO70_pdkbtq8sXveSCuBsdGNJY_3q"
+                src="public/protest2.jpg"
                 referrerPolicy="no-referrer"
               />
             </div>
 
             {/* Image 3 (row-span-2) */}
-            <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-md row-span-2 relative group">
+            <div className="aspect-4/5 rounded-2xl overflow-hidden shadow-md row-span-2 relative group">
               <img 
                 alt="Student leader at podium"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMx9tvOZt_vAk109z8Q66WchTjixKapmLlQ_V759RL93o4yu_uY-oSWZbU7O0qri17EF78jMVIDC3q9G9jJrEpMn-BCbnbjAW0d85rgPIqpB5DPtRQzvf4I2e1AODkkMHswON8AeWw_zIc0_RLtHEiDtUYYfl_mvoVOs0A5wlebYYYgVQPeY0vspZ0oim7MdxEL2GyqV2Tz6G1T0dU3JSKOsoHXiJxkI3PwdW4te1VfwZueFfa1qp4nCKTSXo86W07sRDEd4gXf0u4"
+                src="public/stud_panel.jpg"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -657,7 +657,7 @@ export default function AboutPage({ activeLang, onJoinClick, onExploreOrgClick }
               <img 
                 alt="Large student assembly outdoors"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdcHmCJtXds_h7KQKxs-kYm8zW6dPucPPexZ2-dxgTdvrSN9TjGHHjkmIPiGnNHhJbV_UHNzRlvhwyH6ij0U9kCf0jVB8LMpkg8yQtnSrO1tlaQmJK3jtw2-g_eY8l_HgNbFU3imUrUXjgIkevCifidVigvx5dAfvTuNg2-5Pe-JMl3vTqdpLrZVSj4SQZKA37bgvkxVF-hkUfejDQnz-_FK7tCAvK8xy98HWy_7bFvqOL2eRxYjPU0NXL9XR9MB8xbEhXduOG29Gq"
+                src="public/images (3).jpg"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -667,7 +667,7 @@ export default function AboutPage({ activeLang, onJoinClick, onExploreOrgClick }
               <img 
                 alt="Students brainstorming in workshop"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmcBR5RJs4KwD2cpFvrZ7VKSm636BGwSITGJgNYxeuTlsV9c8lWGIbUNRdx-VMsM58TFR3N5ZRMfh6tpgUMG_XLDpDBHDNie6FV3_CBffswNs5ESNl4-aEAveBVvnclh4otx9uEz2dWFcs61bgBQDugUr7I8IfLJoDCvGBtXAgrlSas2UV7XUnojrqxS4Vx6RO4wY83URdp261mALTnVSconT1nIWdww7g0_k4b9lBeS1MH7WcUVGqUK3JVggqOYfcCznjVwR9hAVe"
+                src="public/academic_excellence.jpg"
                 referrerPolicy="no-referrer"
               />
             </div>

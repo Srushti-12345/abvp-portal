@@ -173,7 +173,7 @@ export default function ActivitiesPreview({
             <div 
               className="absolute inset-0 bg-cover bg-center group-hover:scale-102 transition-transform duration-700" 
               style={{ 
-                backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMP0g_hGdzn4LGjj74L6qFIYb9FgbAjId4asCj9u2OeRxzlYaqApTo8ZbQ7tCazMBGPyDchgL4w7c1tsjBmEotGp6f0O_ArB-HrkOAy9OhpJkwCopHABpwB6V-krfiuS0okWBkUKu0uFJ6YSdcJHFI0ikCZ2bocbwMp1X3-On_cxKKHKLzwx69sxt0ZQWNzLawdKXA6X7NjH8jRGb5LPGDF3Zn4Tzlol_YN2jhPjWEoj9NsIj5Ue762GHUgHixpvPDym135OPQUIOl')`
+                backgroundImage: `url('/home_img/home_img2.jpg')` 
               }}
             />
             {/* Tonal gradient overlay */}

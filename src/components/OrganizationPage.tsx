@@ -324,7 +324,7 @@ export default function OrganizationPage({ activeLang, onJoinClick }: Organizati
           <img 
             alt="ABVP Leadership Conference" 
             className="w-full h-full object-cover" 
-            src="https://lh3.googleusercontent.com/aida/AP1WRLu4UXbIwTIJ2pd2-pgogwh3OUC_Yb2lV-njfiRABzH43RMNui7Zf6TV4i7-eIU2YYDVoysj1WtZuYoIjfO9IQ6ig1KE_vmVHqzj_NVNO2vYbKSxGoY7i9Dozk4hzrvaRzmEam9bmk80COedlwkCWEELvcD1q_7NS_3YGLMSrKjIPwkD5OVdoUIx1_bE-ulkAYcvVRMxoYEc5W_man_rk8bSL7-lNjpdiKh-wEiJYqFPBVVVL00pTKvCgYMN"
+            src="/public/strategic_illustration.jpg"
             referrerPolicy="no-referrer"
           />
         </div>
@@ -416,7 +416,7 @@ export default function OrganizationPage({ activeLang, onJoinClick }: Organizati
               <img 
                 alt="Strategic Illustration" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                src="https://lh3.googleusercontent.com/aida/AP1WRLvDEYlgiY4mcz_gAZjdO6XmVNmYESzfTK06FLSVgyfgByU4JWWE9TvyxeGUL8ZRgnWb2zungC0svX-fnafaiG1YDq8rhqsoPEEGIxSIhlctiCynHC5HNj_LxVRZjAK4kjL9qo8SjOtEvvmo_tGhREAQyqO8arZu7ioEZZvfo_xui6t8By_YXthvo5JwGezYecpOciQoZI_9W82QZI3tVk5ZU4yXl_hW4-uCsMuBch9_LSG3vDzkGN71oqTa"
+                src="/public/leadership_conference.jpg"
                 referrerPolicy="no-referrer"
               />
             </div>
